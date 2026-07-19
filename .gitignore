@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# Backend virtual environment
+backend/venv/
+
+# Frontend dependencies
+frontend/node_modules/
+
+# Environment files
+.env
+
+# VS Code settings (optional)
+.vscode/
+
+
+#Root .gitignore
+#This applies to the entire project.
+#It tells Git:
+#Ignore the backend virtual environment.
+#Ignore the frontend node_modules folder (we'll create it later).
+#Ignore Python cache files.
+#Ignore environment files.
