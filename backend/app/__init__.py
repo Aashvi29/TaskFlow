@@ -1,4 +1,4 @@
-from flask import Flask #Go to the Flask library and bring me the Flask class
+""" from flask import Flask #Go to the Flask library and bring me the Flask class
 
 
 def create_app():  #Instead of creating the application immediately, we're creating a function whose job is:"Whenever someone asks, build and return a Flask application."
@@ -10,4 +10,26 @@ def create_app():  #Instead of creating the application immediately, we're creat
     def home():
         return "welcome to taskflow backend!"
     
-    return app 
+    return app """
+
+from flask import Flask
+from .config import Config
+from .extensions import db
+
+def create_app():
+
+    app = Flask(__name__)
+
+    app.config.from_object(Config)
+
+    db.init_app(app)
+    from .models import Task
+
+    with app.app_context():
+        db.create_all()
+
+    from .routes import main
+
+    app.register_blueprint(main)
+
+    return app
