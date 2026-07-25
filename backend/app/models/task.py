@@ -1,4 +1,4 @@
-from .extensions import db
+from ..extensions import db
 
 class Task(db.Model):
     __tablename__ = "tasks"
@@ -12,7 +12,7 @@ class Task(db.Model):
 
     completed = db.Column(db.Boolean, default=False)
 
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    created_at = db.Column(db.DateTime, default=db.func.now())
 
     def to_dict(self):
      return {

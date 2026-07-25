@@ -1,6 +1,9 @@
 from flask import Blueprint, request
 from .models import Task
 from .extensions import db
+print(Task)
+print(Task.__table__.columns.keys())
+
 
 main = Blueprint("main", __name__)
 
@@ -28,19 +31,22 @@ def create_task():
         return{
             "error": "No data provided."
         }, 400
-    if "title" not in data:
+    title = data.get("title")
+
+    if not title:
         return {
-            "error": "Title is required."
-        }, 400
-     
+        "error": "Title is required."
+    }, 400
 
     new_task = Task(
-        title=data["title"],
-        description=data.get("description")
-    )
+    title=title,
+    description=data.get("description"),
+    priority=data.get("priority", "Medium")
+)
 
     db.session.add(new_task)
     db.session.commit()
+    db.session.refresh(new_task)
 
     return {
     "success": True,
