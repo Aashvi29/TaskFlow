@@ -15,12 +15,36 @@ def home():
 @main.route("/tasks", methods=["GET"])
 def get_tasks():
 
-    tasks = Task.query.all()
+    completed = request.args.get("completed")
+    priority = request.args.get("priority")
+
+    query = Task.query
+
+    if completed is not None:
+        query = query.filter_by(
+            completed=completed.lower() == "true"
+        )
+
+    if priority:
+        query = query.filter_by(priority=priority)
+
+    tasks = query.all()
+
     return {
-    "success": True,
-    "count": len(tasks),
-    "data": [task.to_dict() for task in tasks]
-}
+        "success": True,
+        "count": len(tasks),
+        "data": [task.to_dict() for task in tasks]
+    }
+
+@main.route("/tasks/<int:id>", methods=["GET"])
+def get_task(id):
+
+    task = Task.query.get_or_404(id)
+
+    return {
+        "success": True,
+        "data": task.to_dict()
+    }
 
 
 @main.route("/tasks", methods=["POST"])
@@ -61,15 +85,32 @@ def update_task(id):
 
     task = Task.query.get_or_404(id)
 
-    task.completed = True
+    data = request.get_json()
+
+    if not data:
+        return {
+            "error": "No data provided."
+        }, 400
+
+    if "title" in data:
+        task.title = data["title"]
+
+    if "description" in data:
+        task.description = data["description"]
+
+    if "priority" in data:
+        task.priority = data["priority"]
+
+    if "completed" in data:
+        task.completed = data["completed"]
 
     db.session.commit()
 
     return {
-    "success": True,
-    "message": "Task updated successfully.",
-    "data": task.to_dict()
-}
+        "success": True,
+        "message": "Task updated successfully.",
+        "data": task.to_dict()
+    }
     
 @main.route("/tasks/<int:id>", methods=["DELETE"])
 def delete_task(id):
