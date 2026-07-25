@@ -14,7 +14,7 @@ def create_app():  #Instead of creating the application immediately, we're creat
 
 from flask import Flask
 from .config import Config
-from .extensions import db
+from .extensions import db, migrate
 
 def create_app():
 
@@ -23,10 +23,8 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    migrate.init_app(app,db)
     from .models import Task
-
-    with app.app_context():
-        db.create_all()
 
     from .routes import main
 
