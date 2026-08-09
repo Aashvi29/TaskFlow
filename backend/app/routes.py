@@ -3,9 +3,6 @@ from .models import Task
 from .extensions import db
 from sqlalchemy import case
 
-print(Task)
-print(Task.__table__.columns.keys())
-
 main = Blueprint("main", __name__)
 
 
