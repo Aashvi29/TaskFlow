@@ -13,12 +13,14 @@ def create_app():  #Instead of creating the application immediately, we're creat
     return app """
 
 from flask import Flask
+from flask_cors import CORS
 from .config import Config
 from .extensions import db, migrate
 
 def create_app():
 
     app = Flask(__name__)
+    CORS(app)
 
     app.config.from_object(Config)
 
