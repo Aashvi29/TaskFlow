@@ -57,6 +57,18 @@ function Tasks() {
     }
   }
 
+  const deleteTask = async (id) => {
+    try {
+      await API.delete(`/tasks/${id}`)
+
+      setTasks(
+        tasks.filter((task) => task.id !== id)
+      )
+    } catch (error) {
+      console.error("Error deleting task:", error)
+    }
+  }
+
   return (
     <main className="max-w-7xl mx-auto px-6 py-10">
 
@@ -126,6 +138,14 @@ function Tasks() {
                   Complete
                 </button>
               )}
+
+              <button
+                onClick={() => deleteTask(task.id)}
+                className="mt-3 ml-2 bg-red-600 text-white px-4 py-2 rounded-lg"
+              >
+                Delete
+              </button>
+
             </div>
           ))
         )}
