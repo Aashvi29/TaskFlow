@@ -41,6 +41,22 @@ function Tasks() {
     }
   }
 
+  const completeTask = async (id) => {
+    try {
+      const response = await API.put(`/tasks/${id}`, {
+        completed: true
+      })
+
+      setTasks(
+        tasks.map((task) =>
+          task.id === id ? response.data.data : task
+        )
+      )
+    } catch (error) {
+      console.error("Error completing task:", error)
+    }
+  }
+
   return (
     <main className="max-w-7xl mx-auto px-6 py-10">
 
@@ -59,14 +75,14 @@ function Tasks() {
           placeholder="Enter task title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="w-full border rounded-lg px-4 py-2"
+          className="w-full border border-gray-300 rounded-lg px-4 py-2"
         />
 
         <textarea
           placeholder="Enter task description"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          className="w-full border rounded-lg px-4 py-2"
+          className="w-full border border-gray-300 rounded-lg px-4 py-2"
         />
 
         <button
@@ -97,6 +113,19 @@ function Tasks() {
               <p className="text-gray-600">
                 {task.description}
               </p>
+
+              <p className="mt-2 text-sm">
+                Status: {task.completed ? "Completed" : "Pending"}
+              </p>
+
+              {!task.completed && (
+                <button
+                  onClick={() => completeTask(task.id)}
+                  className="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Complete
+                </button>
+              )}
             </div>
           ))
         )}
